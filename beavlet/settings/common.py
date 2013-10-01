@@ -36,6 +36,7 @@ INSTALLED_APPS = (
 
     'south',
     'gunicorn',
+    'filters',
     # 'django_extensions',
 
     # '{{ project_name }}.core'
@@ -68,6 +69,8 @@ STATICFILES_DIRS = (
     # Put strings here, like "/home/html/static" or "C:/www/django/static".
     # Always use forward slashes, even on Windows.
     # Don't forget to use absolute paths, not relative paths.
+    '/Users/nezar/Projects/beavlet-project/static',
+
 )
 
 # List of finder classes that know how to find static files in
@@ -90,6 +93,7 @@ TEMPLATE_LOADERS = (
 )
 
 TEMPLATE_DIRS = (
+    '/Users/nezar/Projects/beavlet-project/templates',
     # Put strings here, like "/home/html/django_templates" or "C:/www/django/templates".
     # Always use forward slashes, even on Windows.
     # Don't forget to use absolute paths, not relative paths.

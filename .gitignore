@@ -1,18 +1,24 @@
 *.py[cod]
-
-# C extensions
 *.so
+
+# Database
+*.sqlite3
+*.db
+*.rdb
 
 # Unit test / coverage reports
 .coverage
 .tox
 nosetests.xml
 
-bin/
-
-*.sqlite3
-*.db
-*.rdb
+# OS or Editor folders
+.DS_Store
+.cache
+.project
+.settings
+.tmproj
+nbproject
+Thumbs.db
 
 # Numerous always-ignore extensions
 *.diff
@@ -26,21 +32,13 @@ bin/
 *~
 *.sass-cache
 
-# OS or Editor folders
-.DS_Store
-.cache
-.project
-.settings
-.tmproj
-nbproject
-Thumbs.db
-
-# NPM packages folder.
+# Folders
+tmp/
+bin/
 node_modules/
 
-# Brunch folder for temporary files.
-tmp/
 
-# Ignore compiled files (js, css, etc.)
-# core/*.js
-# *.css
+
+## Ignore compiled files (js, css, etc.)
+#core/*.js
+#*.css
