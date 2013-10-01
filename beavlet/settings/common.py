@@ -33,7 +33,7 @@ MANAGERS = ADMINS
 
 SITE_ID = 1
 
-TIME_ZONE = 'UTC'
+TIME_ZONE = None
 USE_I18N = True
 USE_L10N = True
 USE_TZ = True
@@ -48,10 +48,11 @@ INSTALLED_APPS = (
     'django.contrib.sessions',
     'django.contrib.sites',
     'django.contrib.messages',
-    #'django.contrib.staticfiles',
+    'django.contrib.staticfiles',
     'django.contrib.admin',
     # 'django.contrib.admindocs',
 
+    'storages',
     'gunicorn',
     'south',
     'filters',
