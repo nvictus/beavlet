@@ -36,6 +36,7 @@ Thumbs.db
 tmp/
 bin/
 node_modules/
+staticfiles/
 
 
 
