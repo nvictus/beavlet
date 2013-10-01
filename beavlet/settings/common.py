@@ -1,4 +1,22 @@
 import os
+from os.path import abspath, basename, dirname
+
+#==============================================================================
+# Path configuration
+#==============================================================================
+# Absolute filesystem path to the Django project directory:
+PROJECT_ROOT = dirname(dirname(abspath(__file__)))
+
+# Absolute filesystem path to the top-level project folder:
+SITE_ROOT = dirname(PROJECT_ROOT)
+
+# Site name:
+SITE_NAME = basename(PROJECT_ROOT)
+
+# Add our project to our pythonpath, this way we don't need to type our project
+# name in our dotted import paths:
+#path.append(PROJECT_ROOT)
+
 
 #==============================================================================
 # Generic Django project settings
@@ -69,7 +87,7 @@ STATICFILES_DIRS = (
     # Put strings here, like "/home/html/static" or "C:/www/django/static".
     # Always use forward slashes, even on Windows.
     # Don't forget to use absolute paths, not relative paths.
-    '/Users/nezar/Projects/beavlet-project/static',
+    os.path.join(SITE_ROOT, 'static'),
 
 )
 
@@ -93,7 +111,7 @@ TEMPLATE_LOADERS = (
 )
 
 TEMPLATE_DIRS = (
-    '/Users/nezar/Projects/beavlet-project/templates',
+    os.path.join(SITE_ROOT, 'templates'),
     # Put strings here, like "/home/html/django_templates" or "C:/www/django/templates".
     # Always use forward slashes, even on Windows.
     # Don't forget to use absolute paths, not relative paths.
