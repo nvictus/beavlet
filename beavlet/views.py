@@ -13,7 +13,7 @@ from IPython.nbformat import current as nbformat
 from IPython.nbconvert.exporters import HTMLExporter
 from IPython.config import Config
 
-# Instantiate the exporter
+# Instantiate and configure the exporter
 config = Config()
 config.HTMLExporter.template_file = 'basic'
 config.NbconvertApp.fileext = 'html'
@@ -25,17 +25,10 @@ html_exporter = HTMLExporter(config=config)
 class NbFormatError(Exception):
     pass
 
-# from flask import Flask, request, render_template
-# from flask import redirect, abort, Response
-# from flask.ext.cache import Cache
-# from flaskext.markdown import Markdown
-# from werkzeug.routing import BaseConverter
-# from werkzeug.exceptions import NotFound
-# from lib.MemcachedMultipart import multipartmemecached
-# minutes = 60
-# hours = 60*minutes
 
-#@app.route('/')
+# Views
+# =====
+
 def hello(request):
     #nvisit = int(request.cookies.get('rendered_urls', 0))
     #betauser = (True if nvisit > 30 else False)
@@ -44,19 +37,14 @@ def hello(request):
     #response.set_cookie('theme', value=theme)
     return response
 
-#@app.route('/faq')
-#@cache.cached(5*hours)
 def faq(request):
     return render(request, 'faq.md')
 
-#@app.route('/popular')
-#@cache.cached(1*minutes)
 def popular(request):
     entries = [{'url':y.url, 'count':x} 
                for x, y in stats.most_accessed(count=20)]
     return render(request, 'popular.html', {'entries':entries})
 
-#@app.route('/create/', methods=['POST'])
 def create(request, value=None):
     if request.method == 'POST':
         value = request.POST['gistnorurl'] #form entry
@@ -77,9 +65,7 @@ def create(request, value=None):
     response.set_cookie('rendered_urls', value=nvisit+1)
     return response
 
-#@app.route('/url/<path:url>')
-#@app.route('/urls/<path:url>')
-#@cache.memoize(10*minutes)
+# caching not implemented yet #@cache.memoize(10*minutes)
 def fetch_and_render_url(request, url, https=False):
     # 1. Fetch
     url = ('https://' + url) if https else ('http://' + url)
@@ -99,33 +85,6 @@ def fetch_and_render_url(request, url, https=False):
 
     return render(request, 'notebook.html', content) 
 
-#https !
-#@cache.memoize()
-def cached_get_request(url):
-    try:
-        r = requests.get(url, timeout=8)
-    except RequestException as e:
-        if '/files/' in url:
-            new_url = url.replace('/files/', '/', 1) 
-            #app.logger.info("redirecting nb local-files url: %s to %s" % (url, new_url))
-            return redirect(new_url)
-        #app.logger.error("Error (%s) in request: %s" % (e, url), exc_info=False)
-        return HttpResponse(render_to_string("400.html"), status=400)
-    except Exception:
-        #app.logger.error("Unhandled exception in request: %s" % url, exc_info=True)
-        return HttpResponse(render_to_string("500.html"), status=500)
-
-    if not r.ok:
-        #summary = request_summary(r, header=(r.status_code != 404), content=app.debug)
-        if r.status_code == 404:
-            return HttpResponse(render_to_string("404.html"), status=404)
-        else:
-            return HttpResponse(render_to_string("400.html"), status=400)
-    return r
-
-
-#@app.route('/<regex("[a-f0-9]+"):id>')
-#@app.route('/<regex("[a-f0-9]+"):id>/<subfile>')
 def fetch_and_render_gist(request, id=None, subfile=None):
     """Fetch and render a post from the Github API"""
     #1. Fetch
@@ -161,6 +120,33 @@ def fetch_and_render_gist(request, id=None, subfile=None):
         response = render(request, 'gistlist.html', {'entries': entries})
 
     return response
+
+# =====
+
+
+
+# caching not implemented yet #@cache.memoize()
+def cached_get_request(url):
+    try:
+        r = requests.get(url, timeout=8)
+    except RequestException as e:
+        if '/files/' in url:
+            new_url = url.replace('/files/', '/', 1) 
+            #app.logger.info("redirecting nb local-files url: %s to %s" % (url, new_url))
+            return redirect(new_url)
+        #app.logger.error("Error (%s) in request: %s" % (e, url), exc_info=False)
+        return HttpResponse(render_to_string("400.html"), status=400)
+    except Exception:
+        #app.logger.error("Unhandled exception in request: %s" % url, exc_info=True)
+        return HttpResponse(render_to_string("500.html"), status=500)
+
+    if not r.ok:
+        #summary = request_summary(r, header=(r.status_code != 404), content=app.debug)
+        if r.status_code == 404:
+            return HttpResponse(render_to_string("404.html"), status=404)
+        else:
+            return HttpResponse(render_to_string("400.html"), status=400)
+    return r
 
 def github_api_request(url):
     r = requests.get('https://api.github.com/%s' % url) # params=app.config['GITHUB'])
@@ -232,7 +218,26 @@ def request_summary(r, header=False, content=False):
 
 
 
+# app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get('DATABASE_URL', 'sqlite://')
+# app.config['GITHUB'] = {
+#     'client_id': os.environ.get('GITHUB_OAUTH_KEY', ''),
+#     'client_secret': os.environ.get('GITHUB_OAUTH_SECRET', ''),
+# }
 
+# import newrelic.agent
+# def nrhead():
+#     return newrelic.agent.get_browser_timing_header()
+# def nrfoot():
+#     return newrelic.agent.get_browser_timing_footer()
+
+# @cache.cached(5*hours)
+# def _hello(betauser):
+#     return app.make_response(render_template('index.html', betauser=betauser))
+
+# @app.route('/favicon.ico')
+# @cache.cached(5*hours)
+# def favicon():
+#     return static('ico/ipynb_icon_16x16.ico')
 
 # @app.route('/404')
 # def four_o_four():
