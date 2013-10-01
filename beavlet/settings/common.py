@@ -52,8 +52,8 @@ INSTALLED_APPS = (
     'django.contrib.admin',
     # 'django.contrib.admindocs',
 
-    'south',
     'gunicorn',
+    'south',
     'filters',
     # 'django_extensions',
 
