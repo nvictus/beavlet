@@ -1,6 +1,8 @@
 from django.http import HttpResponse
-from django.shortcuts import render
+from django.shortcuts import render, redirect, render_to_response
 from django.template.loader import render_to_string
+from django.core.context_processors import csrf
+from django.views.decorators.csrf import csrf_exempt, csrf_protect
 
 import os
 import re
@@ -45,6 +47,7 @@ def popular(request):
                for x, y in stats.most_accessed(count=20)]
     return render(request, 'popular.html', {'entries':entries})
 
+@csrf_exempt
 def create(request, value=None):
     if request.method == 'POST':
         value = request.POST['gistnorurl'] #form entry
@@ -61,8 +64,8 @@ def create(request, value=None):
     else: # assume http url
         response = redirect('/url/'+value) 
 
-    nvisit = int(request.cookies.get('rendered_urls', 0))
-    response.set_cookie('rendered_urls', value=nvisit+1)
+    #rnvisit = int(request.cookies.get('rendered_urls', 0))
+    #response.set_cookie('rendered_urls', value=nvisit+1)
     return response
 
 # caching not implemented yet #@cache.memoize(10*minutes)
