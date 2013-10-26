@@ -33,7 +33,7 @@ MANAGERS = ADMINS
 
 SITE_ID = 1
 
-TIME_ZONE = None
+TIME_ZONE = 'America/New_York'
 USE_I18N = True
 USE_L10N = True
 USE_TZ = True
@@ -52,7 +52,7 @@ INSTALLED_APPS = (
     'django.contrib.admin',
     # 'django.contrib.admindocs',
 
-    'storages',
+    'storages', #AWS storage backend for Django to get static files from CDN
     'gunicorn',
     'south',
     'filters',
@@ -83,7 +83,7 @@ MEDIA_URL = ''
 STATIC_ROOT = 'staticfiles'
 STATIC_URL = '/static/'
 
-# Additional locations of static files
+# Locations of static files (where to collect from)
 STATICFILES_DIRS = (
     # Put strings here, like "/home/html/static" or "C:/www/django/static".
     # Always use forward slashes, even on Windows.
@@ -99,6 +99,9 @@ STATICFILES_FINDERS = (
     'django.contrib.staticfiles.finders.AppDirectoriesFinder',
 #    'django.contrib.staticfiles.finders.DefaultStorageFinder',
 )
+
+# Honor the 'X-Forwarded-Proto' header for request.is_secure()
+SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
 
 #==============================================================================
 # Templates
