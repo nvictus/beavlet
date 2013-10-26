@@ -27,25 +27,35 @@ html_exporter = HTMLExporter(config=config)
 class NbFormatError(Exception):
     pass
 
+def four_hundred(request=None):
+    if request is None:
+        return HttpResponse(render_to_string("400.html"), status=400)
+    return render(request, "400.html", status=400)
+
+def four_o_four(request=None):
+    if request is None:
+        return HttpResponse(render_to_string("404.html"), status=404)
+    return render(request, "404.html", status=404)
+
+def five_hundred(request=None):
+    if request is None:
+        return HttpResponse(render_to_string("500.html"), status=500)
+    return render(request, "500.html", status=500)
+
+
+
+
+
 
 # Views
 # =====
 
 def hello(request):
-    #nvisit = int(request.cookies.get('rendered_urls', 0))
-    #betauser = (True if nvisit > 30 else False)
-    #theme = request.cookies.get('theme', None)
-    response = render(request, 'index.html') # {'betauser': betauser})
-    #response.set_cookie('theme', value=theme)
+    response = render(request, 'index.html')
     return response
 
 def faq(request):
     return render(request, 'faq.md')
-
-def popular(request):
-    entries = [{'url':y.url, 'count':x} 
-               for x, y in stats.most_accessed(count=20)]
-    return render(request, 'popular.html', {'entries':entries})
 
 @csrf_exempt
 def create(request, value=None):
@@ -64,55 +74,70 @@ def create(request, value=None):
     else: # assume http url
         response = redirect('/url/'+value) 
 
-    #rnvisit = int(request.cookies.get('rendered_urls', 0))
-    #response.set_cookie('rendered_urls', value=nvisit+1)
     return response
 
 # caching not implemented yet #@cache.memoize(10*minutes)
 def fetch_and_render_url(request, url, https=False):
     # 1. Fetch
     url = ('https://' + url) if https else ('http://' + url)
-    r = cached_get_request(url)
-
+    try:
+        r = cached_get_request(url)
+    except RequestException:
+        if '/files/' in url:
+            new_url = url.replace('/files/', '/', 1) 
+            return redirect(new_url)
+        else:
+            return five_hundred(request)
+    if not r.ok:
+        if r.status_code == 404:
+            return four_o_four()
+        else:
+            return four_hundred()
     # 2. Render
     try:
-        nb = parse_jsonipynb(r.content)
-        #forced_theme = request.cookies.get('theme', None)
-        content = export_ipynb(nb, url) #forced_theme 
+        nb = parse_json(r.content)
+        name, theme, body = render_nb(nb, url)
     except NbFormatError:
-        #app.logger.error("Couldn't parse notebook from %s" % url, exc_info=False)
-        return render(request, "400.html", status=400) 
-    except Exception:
-        #app.logger.error("Couldn't render notebook from %s" % url, exc_info=False)
-        return render(request, "500.html", status=400)     
-
-    return render(request, 'notebook.html', content) 
+        return four_hundred(request)
+    context = {'download_url': url,
+               'download_name': name,
+               'css_theme': theme,
+               'mathjax_conf': None,
+               'body': body }  
+    return render(request, 'notebook.html', context) 
 
 def fetch_and_render_gist(request, id=None, subfile=None):
     """Fetch and render a post from the Github API"""
     #1. Fetch
-    r = github_api_request('gists/{}'.format(id))
-    decoded = r.json().copy()
     try:
+        r = github_api_request('gists/{}'.format(id))
+    except RequestException:
+        return five_hundred(request)
+    if not r.ok:
+        if r.status_code == 404:
+            return four_o_four(request)
+        else:
+            return four_hundred(request)
+    try:
+        decoded = r.json().copy()
         files = decoded['files'].values()
         if subfile:
             files = [f for f in files if f['filename'] == subfile]
     except Exception:
-        #app.logger.error("Couldn't parse notebook from %s" % url, exc_info=False)
-        return render(request, "400.html", status=400) 
-
+        return five_hundred(request)
     #2. Render
     if len(files) == 1:
         try:
-            nb = parse_jsonipynb(files[0]['content'])
-            content_dict = export_ipynb(nb, files[0]['raw_url'])
+            nb = parse_json(files[0]['content'])
         except NbFormatError:
-            #app.logger.error("Failed to render gist: %s" % request_summary(r), exc_info=True)
-            return render(request, "400.html", status=400)
-        except Exception:
-            #app.logger.error("Unhandled error rendering gist: %s" % request_summary(r), exc_info=True)
-            return render(request, "500.html", status=500)
-        response = render(request, 'notebook.html', content_dict)
+            return four_hundred(request)
+        name, theme, body = render_nb(nb, files[0]['raw_url'])
+        context = {'download_url': id,
+                   'download_name': name,
+                   'css_theme': theme,
+                   'mathjax_conf': None,
+                   'body': body }      
+        response = render(request, 'notebook.html', context)
     else:
         entries = []
         for file in files :
@@ -121,80 +146,58 @@ def fetch_and_render_gist(request, id=None, subfile=None):
             entry['url'] = '/%s/%s' % (id, file['filename'])
             entries.append(entry)
         response = render(request, 'gistlist.html', {'entries': entries})
-
     return response
+
+
+# def popular(request):
+#     entries = [{'url':y.url, 'count':x} 
+#                for x, y in stats.most_accessed(count=20)]
+#     return render(request, 'popular.html', {'entries':entries})
 
 # =====
 
 
 
+
+
+
+
+
+
+
+
 # caching not implemented yet #@cache.memoize()
 def cached_get_request(url):
-    try:
-        r = requests.get(url, timeout=8)
-    except RequestException as e:
-        if '/files/' in url:
-            new_url = url.replace('/files/', '/', 1) 
-            #app.logger.info("redirecting nb local-files url: %s to %s" % (url, new_url))
-            return redirect(new_url)
-        #app.logger.error("Error (%s) in request: %s" % (e, url), exc_info=False)
-        return HttpResponse(render_to_string("400.html"), status=400)
-    except Exception:
-        #app.logger.error("Unhandled exception in request: %s" % url, exc_info=True)
-        return HttpResponse(render_to_string("500.html"), status=500)
-
-    if not r.ok:
-        #summary = request_summary(r, header=(r.status_code != 404), content=app.debug)
-        if r.status_code == 404:
-            return HttpResponse(render_to_string("404.html"), status=404)
-        else:
-            return HttpResponse(render_to_string("400.html"), status=400)
-    return r
+    return requests.get(url, timeout=8)
 
 def github_api_request(url):
-    r = requests.get('https://api.github.com/%s' % url) # params=app.config['GITHUB'])
-    if not r.ok:
-        #summary = request_summary(r, header=(r.status_code != 404), content=app.debug)
-        #app.logger.error("API request failed: %s", summary)
-        if r.status_code == 404:
-            return HttpResponse(render_to_string("404.html"), status=404)
-        else:
-            return HttpResponse(render_to_string("400.html"), status=400)
-    return r
+    return requests.get('https://api.github.com/%s' % url) # params=app.config['GITHUB'])
 
-def parse_jsonipynb(content):
+def parse_json(content):
     try :
         nb = nbformat.reads_json(content)
     except ValueError:
         raise NbFormatError('Error reading json notebook')
     return nb
 
-def export_ipynb(nb, url, forced_theme=None):
+def render_nb(nb, url):
     # get the css theme
-    css_theme = nb.get('metadata', {}).get('_nbviewer', {}).get('css', None)
+    css_theme = nb.get('metadata', {})\
+                  .get('_nbviewer', {})\
+                  .get('css', None)
     if css_theme and not re.match('\w', css_theme):
         css_theme = None
-    if forced_theme and forced_theme != 'None' :
-        css_theme = forced_theme
 
     # get the notebook title
-    try:
-        name = nb.metadata.name
-    except AttributeError:
-        name = None  
+    name = nb.metadata.get('name', None)
     if not name:
         name = url.rsplit('/')[-1]
     if not name.endswith(".ipynb"):
         name = name + ".ipynb"
 
     # convert the body to html
-    body = html_exporter.from_notebook_node(nb)[0] 
-
-    return {'download_url': url,
-            'download_name': name,
-            'css_theme': css_theme,
-            'mathjax_conf': None,
-            'body': body }
+    body = html_exporter.from_notebook_node(nb)[0]
+    return name, css_theme, body
 
 def request_summary(r, header=False, content=False):
     """text summary of failed request"""
