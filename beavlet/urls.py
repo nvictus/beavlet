@@ -15,9 +15,9 @@ urlpatterns = patterns('',
         name='faq',
         view=beavlet.views.faq),
 
-    url(r'^popular$', 
-        name='popular',
-        view=beavlet.views.popular),
+    # url(r'^popular$', 
+    #     name='popular',
+    #     view=beavlet.views.popular),
 
     url(r'^create/(?P<value>[\w\/ \.-]*)$', 
         name='create',
