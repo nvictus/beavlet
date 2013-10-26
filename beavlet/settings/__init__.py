@@ -66,7 +66,6 @@ INSTALLED_APPS = (
 #==============================================================================
 
 ENVIRONMENT = os.getenv('ENVIRONMENT', 'DEVELOPMENT')
-
 PROJECT_PATH = os.path.abspath(os.path.join(os.path.dirname(__file__), os.path.pardir))
 PROJECT_NAME = PROJECT_PATH.split('/')[-1]
 
@@ -80,25 +79,27 @@ ROOT_URLCONF = 'beavlet.urls'
 MEDIA_ROOT = ''
 MEDIA_URL = ''
 
+# Absolute path to the directory where collectstatic will collect static files for deployment.
 STATIC_ROOT = 'staticfiles'
+# URL to use when referring to static files located in STATIC_ROOT
 STATIC_URL = '/static/'
-
-# Locations of static files (where to collect from)
-STATICFILES_DIRS = (
-    # Put strings here, like "/home/html/static" or "C:/www/django/static".
-    # Always use forward slashes, even on Windows.
-    # Don't forget to use absolute paths, not relative paths.
-    os.path.join(SITE_ROOT, 'static'),
-
-)
-
-# List of finder classes that know how to find static files in
-# various locations.
+# List of finder classes that know how to find static files in various locations.
 STATICFILES_FINDERS = (
     'django.contrib.staticfiles.finders.FileSystemFinder',
     'django.contrib.staticfiles.finders.AppDirectoriesFinder',
 #    'django.contrib.staticfiles.finders.DefaultStorageFinder',
 )
+ # Additional locations the staticfiles app will traverse if the 
+ # FileSystemFinder finder is enabled, e.g. if you use the collectstatic 
+ # or findstatic management command
+STATICFILES_DIRS = (
+    # Put strings here, like "/home/html/static" or "C:/www/django/static".
+    # Always use forward slashes, even on Windows.
+    # Don't forget to use absolute paths, not relative paths.
+    os.path.join(SITE_ROOT, 'static'),
+)
+# The file storage engine to use when collecting static files with the collectstatic management command.
+#STATICFILES_STORAGE = 'storages.backends.s3boto.S3BotoStorage'
 
 # Honor the 'X-Forwarded-Proto' header for request.is_secure()
 SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
