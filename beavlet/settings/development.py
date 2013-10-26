@@ -15,7 +15,7 @@ DATABASES = {
 }
 
 if not DEBUG:
-    ALLOWED_HOSTS = ['localhost']
+    ALLOWED_HOSTS = ['*']
     
     AWS_STORAGE_BUCKET_NAME = os.environ['AWS_STORAGE_BUCKET_NAME']
     AWS_ACCESS_KEY_ID = os.environ['AWS_ACCESS_KEY_ID']
