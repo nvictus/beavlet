@@ -1,6 +1,6 @@
 import os
 
-from beavlet.settings.common import *
+from beavlet.settings import *
 
 #==============================================================================
 # Generic Django project settings
