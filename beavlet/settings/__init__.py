@@ -40,7 +40,7 @@ USE_TZ = True
 LANGUAGE_CODE = 'en-us'
 
 # Make this unique, and don't share it with anybody.
-SECRET_KEY = 'm&=$@_w!d3$0ka&ec6&@)g^#f(z9hvco%1mqgw=1@(qozjevzp'
+SECRET_KEY = os.environ.get('SECRET_KEY', '')
 
 INSTALLED_APPS = (
     'django.contrib.auth',
