@@ -14,7 +14,6 @@ framework.
 
 """
 import os
-
 ENVIRONMENT = os.getenv('ENVIRONMENT')
 if ENVIRONMENT == 'STAGING':
     settings = 'staging'

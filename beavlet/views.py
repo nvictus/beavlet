@@ -16,13 +16,13 @@ from IPython.nbconvert.exporters import HTMLExporter
 from IPython.config import Config
 
 # Instantiate and configure the exporter
-config = Config()
-config.HTMLExporter.template_file = 'basic'
-config.NbconvertApp.fileext = 'html'
-config.CSSHTMLHeaderTransformer.enabled = False
+c = Config()
+c.HTMLExporter.template_file = 'basic'
+c.NbconvertApp.fileext = 'html'
+c.CSSHTMLHeaderTransformer.enabled = False
 # don't strip the files prefix - we use it for redirects
-config.Exporter.filters = {'strip_files_prefix': lambda s: s}
-html_exporter = HTMLExporter(config=config)
+c.Exporter.filters = {'strip_files_prefix': lambda s: s}
+html_exporter = HTMLExporter(config=c)
 
 class NbFormatError(Exception):
     pass
