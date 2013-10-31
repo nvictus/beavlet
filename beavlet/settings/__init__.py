@@ -55,7 +55,7 @@ INSTALLED_APPS = (
     'storages', #AWS storage backend for Django to get static files from CDN
     'gunicorn',
     'south',
-    'filters',
+    'filters', #custom template filters
     # 'django_extensions',
 
     # '{{ project_name }}.core'

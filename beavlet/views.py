@@ -51,8 +51,7 @@ def five_hundred(request=None):
 # =====
 
 def hello(request):
-    response = render(request, 'index.html')
-    return response
+    return render(request, 'index.html')
 
 def faq(request):
     return render(request, 'faq.md')
