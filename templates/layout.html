@@ -24,15 +24,28 @@
     <link rel="apple-touch-icon-precomposed" sizes="114x114" href="{{ STATIC_URL }}ico/apple-touch-icon-114-precomposed.png">
     <link rel="apple-touch-icon-precomposed" sizes="72x72" href="{{ STATIC_URL }}ico/apple-touch-icon-72-precomposed.png">
     <link rel="apple-touch-icon-precomposed" href="{{ STATIC_URL }}ico/apple-touch-icon-57-precomposed.png">
+
     {% block extra_head %}
     {% endblock %}
+
+    <!-- Analytics -->
+    <!-- <script type="text/javascript">
+      var _gaq = _gaq || [];
+      _gaq.push(['_setAccount', 'UA-38683231-2']);
+      _gaq.push(['_trackPageview']);
+
+      (function() {
+        var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+        ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+        var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+      })();
+    </script> -->
   </head>
+
 
   <body data-spy="scroll" data-target=".subnav" data-offset="50">
 
-
-  <!-- Navbar
-  ================================================== -->
+    <!-- Navbar -->
     <div class="navbar navbar-fixed-top">
       <div class="navbar-inner">
         <div class="container">
@@ -55,6 +68,7 @@
               <li>
               <a href="http://penandpants.com/2012/10/16/open-in-nbviewer-bookmarklet/">Bookmarklet</a>
               </li>
+
               {% if betauser %}
                   <li class="{{index}}">
                     <a href="http://nbviewer-dev.herokuapp.com">Try the beta</a>
@@ -68,19 +82,19 @@
         </div>
       </div>
     </div>
+
     <div class="container">
+      {% block body %}
+      {% endblock %}
 
-{% block body %}{% endblock %}
-
-     <!-- Footer
-     ================================================== -->
+      <!-- Footer -->
       <footer class="footer">
-      <p class="pull-right"><a href="#">Back to top</a></p>
-      <p>More info on <a href='http://ipython.org'> IPython website </a>.
-      <a href="https://github.com/ipython/nbviewer">The code for this site</a> is licensed under  <a href="https://github.com/ipython/nbviewer/blob/master/LICENSE.txt" target="_blank">BSD</a>.
-      Some icons from <a href="http://glyphicons.com">Glyphicons Free</a>, built thanks to <a href="http://twitter.github.com/bootstrap/"> Twitter Bootstrap</a></p>
-      <p>This web site does not host notebooks, it only renders notebooks available on other websites.
-      Thanks to all our <a href="https://github.com/ipython/nbviewer/contributors">contributors</a>.</p>
+        <p class="pull-right"><a href="#">Back to top</a></p>
+        <p>More info on <a href='http://ipython.org'> IPython website </a>.
+        <a href="https://github.com/ipython/nbviewer">The code for this site</a> is licensed under  <a href="https://github.com/ipython/nbviewer/blob/master/LICENSE.txt" target="_blank">BSD</a>.
+        Some icons from <a href="http://glyphicons.com">Glyphicons Free</a>, built thanks to <a href="http://twitter.github.com/bootstrap/"> Twitter Bootstrap</a></p>
+        <p>This web site does not host notebooks, it only renders notebooks available on other websites.
+        Thanks to all our <a href="https://github.com/ipython/nbviewer/contributors">contributors</a>.</p>
       </footer>
     </div><!-- /container -->
 
@@ -106,21 +120,6 @@
     <!--<script src="{{ STATIC_URL }}js/bootstrap-carousel.js"></script>-->
     <!--<script src="{{ STATIC_URL }}js/bootstrap-typeahead.js"></script>-->
     <!--<script src="{{ STATIC_URL }}js/application.js"></script>-->
-
-
-    <!-- Analytics
-    ================================================== -->
-    <script type="text/javascript">
-      var _gaq = _gaq || [];
-      _gaq.push(['_setAccount', 'UA-38683231-2']);
-      _gaq.push(['_trackPageview']);
-
-      (function() {
-        var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
-        ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
-        var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
-      })();
-
-    </script>
   </body>
+
 </html>
