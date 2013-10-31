@@ -1,4 +1,4 @@
-from beavlet.settings import *
+from settings import *
 import dj_database_url
 
 #==============================================================================

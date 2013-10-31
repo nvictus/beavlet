@@ -1,4 +1,4 @@
-from beavlet.settings import *
+from settings import *
 
 #==============================================================================
 # Generic Django project settings

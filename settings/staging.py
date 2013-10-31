@@ -1,6 +1,5 @@
+from settings import *
 import dj_database_url
-
-from beavlet.settings.common import *
 
 #==============================================================================
 # Generic Django project settings

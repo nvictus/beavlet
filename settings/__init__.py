@@ -8,10 +8,10 @@ from os.path import abspath, basename, dirname
 PROJECT_ROOT = dirname(dirname(abspath(__file__)))
 
 # Absolute filesystem path to the top-level project folder:
-SITE_ROOT = dirname(PROJECT_ROOT)
+SITE_ROOT = PROJECT_ROOT
 
 # Site name:
-SITE_NAME = basename(PROJECT_ROOT)
+SITE_NAME = 'beavlet'
 
 # Add our project to our pythonpath, this way we don't need to type our project
 # name in our dotted import paths:
@@ -74,7 +74,7 @@ PROJECT_NAME = PROJECT_PATH.split('/')[-1]
 # Project URLS and media settings
 #==============================================================================
 
-ROOT_URLCONF = 'beavlet.urls'
+ROOT_URLCONF = 'urls'
 
 MEDIA_ROOT = ''
 MEDIA_URL = ''
@@ -145,7 +145,7 @@ MIDDLEWARE_CLASSES = (
 #==============================================================================
 
 # Python dotted path to the WSGI application used by Django's runserver.
-WSGI_APPLICATION = 'beavlet.wsgi.application'
+WSGI_APPLICATION = 'wsgi.application'
 
 #==============================================================================
 # Third party app settings

@@ -12,7 +12,7 @@ if __name__ == "__main__":
     else:
         settings = 'development'
     os.environ.setdefault("DJANGO_SETTINGS_MODULE",
-        "beavlet.settings.{settings}".format(settings=settings))
+        "settings.{settings}".format(settings=settings))
 
     from django.core.management import execute_from_command_line
 
