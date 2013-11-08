@@ -1,0 +1,42 @@
+{% extends 'base.html' %}
+ 
+ 
+{% block title %} Blog Archive {% endblock %}
+ 
+
+ 
+
+{% block content %}
+
+<p> Hello, Beaver! </p>
+
+{% if user.username %}
+     <p> Hello, Beaver {{user.username}}! </p>
+{% else %}
+    <p>
+    Welcome anonymous user! You need to <a href="/blog/login/">login</a> before you can store and share bookmarks.
+    </p>
+{% endif %}
+
+
+    <h1> My Blog Archive </h1>
+    {% for post in posts %}
+    <div class="post">
+        <h2>
+            <a href="{{post.get_absolute_url}}">
+                {{post.title}}
+            </a>
+        </h2>
+        <p>{{post.description}}</p>
+        <p>
+            Posted on
+            <time datetime="{{post.created|date:"c"}}">
+            {{post.created|date}}
+            </time>
+        </p>
+        <p>
+            {{post.content|safe}}
+        </p>
+    </div>
+    {% endfor %}
+{% endblock %}

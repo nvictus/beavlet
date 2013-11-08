@@ -22,7 +22,7 @@ elif ENVIRONMENT == 'PRODUCTION':
 else:
     settings = 'development'
 os.environ.setdefault("DJANGO_SETTINGS_MODULE", 
-    "beavlet.settings.{settings}".format(settings=settings))
+    "settings.{settings}".format(settings=settings))
 
 # This application object is used by any WSGI server configured to use this
 # file. This includes Django's development server, if the WSGI_APPLICATION
@@ -31,5 +31,6 @@ from django.core.wsgi import get_wsgi_application
 application = get_wsgi_application()
 
 # Apply WSGI middleware here.
-from dj_static import Cling
-application = Cling(application)
+if not os.environ.get('USE_AWS', False):
+    from dj_static import Cling
+    application = Cling(application)
