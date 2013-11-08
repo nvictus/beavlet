@@ -1,6 +1,14 @@
 import os
 from os.path import abspath, basename, dirname
 
+def env_var(key, default=None):
+    val = os.getenv(key, default)
+    if val == 'True':
+        val = True
+    elif val == 'False':
+        val = False
+    return val
+
 #==============================================================================
 # Path configuration
 #==============================================================================
@@ -17,7 +25,7 @@ SITE_NAME = 'beavlet'
 # name in our dotted import paths:
 #path.append(PROJECT_ROOT)
 
-ENVIRONMENT = os.getenv('ENVIRONMENT', 'DEVELOPMENT')
+ENVIRONMENT = env_var('ENVIRONMENT', 'DEVELOPMENT')
 
 PROJECT_PATH = os.path.abspath(os.path.join(os.path.dirname(__file__), os.path.pardir))
 
@@ -33,7 +41,7 @@ WSGI_APPLICATION = 'wsgi.application'
 #==============================================================================
 
 # Make this unique, and don't share it with anybody.
-SECRET_KEY = os.environ.get('SECRET_KEY', '')
+SECRET_KEY = env_var('SECRET_KEY', '')
 
 #==============================================================================
 # Generic Django project settings
@@ -54,13 +62,14 @@ INSTALLED_APPS = (
     # 'django.contrib.admindocs',
     'gunicorn',
     #'south',
-    'apps.blog'
 )
 
 # My apps
 INSTALLED_APPS += (
-    # '{{ project_name }}.core'
+    #'core'
     'filters', #custom template filters
+    'apps.blog',
+    'apps.nbviewer'
 )
 
 #==============================================================================
@@ -102,7 +111,7 @@ STATICFILES_DIRS = (
 # The file storage engine to use when collecting static files with the 
 # collectstatic management command.
 # AWS storage backend for Django to get static files from CDN
-if os.environ.get('USE_AWS', False):
+if env_var('USE_AWS', False):
     INSTALLED_APPS += (
         'storages',
     )

@@ -13,17 +13,20 @@ middleware here, or combine a Django application with an application of another
 framework.
 
 """
+# Set the appropriate settings module.
 import os
-ENVIRONMENT = os.getenv('ENVIRONMENT')
-if ENVIRONMENT == 'STAGING':
-    settings = 'staging'
-elif ENVIRONMENT == 'PRODUCTION':
-    settings = 'production'
-else:
-    settings = 'development'
-os.environ.setdefault("DJANGO_SETTINGS_MODULE", 
-    "settings.{settings}".format(settings=settings))
+from settings import env_var
 
+env = env_var('ENVIRONMENT')
+if env == 'STAGING':
+    mode = 'staging'
+elif env == 'PRODUCTION':
+    mode = 'production'
+else:
+    mode = 'development'
+os.environ.setdefault("DJANGO_SETTINGS_MODULE", "settings.{}".format(mode))
+
+# Create the application object.
 # This application object is used by any WSGI server configured to use this
 # file. This includes Django's development server, if the WSGI_APPLICATION
 # setting points here.
@@ -31,6 +34,6 @@ from django.core.wsgi import get_wsgi_application
 application = get_wsgi_application()
 
 # Apply WSGI middleware here.
-if not os.environ.get('USE_AWS', False):
+if not env_var('USE_AWS', False):
     from dj_static import Cling
     application = Cling(application)
