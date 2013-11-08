@@ -51,10 +51,10 @@ def five_hundred(request=None):
 # =====
 
 def hello(request):
-    return render(request, 'index.html')
+    return render(request, 'nbviewer/index.html')
 
 def faq(request):
-    return render(request, 'faq.md')
+    return render(request, 'nbviewer/faq.md')
 
 def create(request, value=None):
     if request.method == 'POST':
@@ -102,7 +102,7 @@ def fetch_and_render_url(request, url, https=False):
                'css_theme': theme,
                'mathjax_conf': None,
                'body': body }  
-    return render(request, 'notebook.html', context) 
+    return render(request, 'nbviewer/notebook.html', context) 
 
 def fetch_and_render_gist(request, id=None, subfile=None):
     """Fetch and render a post from the Github API"""
@@ -135,7 +135,7 @@ def fetch_and_render_gist(request, id=None, subfile=None):
                    'css_theme': theme,
                    'mathjax_conf': None,
                    'body': body }      
-        response = render(request, 'notebook.html', context)
+        response = render(request, 'nbviewer/notebook.html', context)
     else:
         entries = []
         for file in files :
@@ -143,7 +143,7 @@ def fetch_and_render_gist(request, id=None, subfile=None):
             entry['path'] = file['filename']
             entry['url'] = '/%s/%s' % (id, file['filename'])
             entries.append(entry)
-        response = render(request, 'gistlist.html', {'entries': entries})
+        response = render(request, 'nbviewer/gistlist.html', {'entries': entries})
     return response
 
 
