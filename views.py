@@ -1,8 +1,8 @@
 from django.http import HttpResponse
 from django.shortcuts import render, redirect, render_to_response
 from django.template.loader import render_to_string
-from django.core.context_processors import csrf
-from django.views.decorators.csrf import csrf_exempt, csrf_protect
+# from django.core.context_processors import csrf
+# from django.views.decorators.csrf import csrf_exempt, csrf_protect
 
 import os
 import re
@@ -56,7 +56,6 @@ def hello(request):
 def faq(request):
     return render(request, 'faq.md')
 
-@csrf_exempt
 def create(request, value=None):
     if request.method == 'POST':
         value = request.POST['gistnorurl'] #form entry
