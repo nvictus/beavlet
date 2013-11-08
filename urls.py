@@ -2,6 +2,7 @@ from django.conf.urls import patterns, include, url
 from django.contrib import admin
 
 import views
+import apps.blog.urls
 
 #admin.autodiscover()
 
@@ -36,6 +37,10 @@ urlpatterns = patterns('',
     url(r'^(?P<id>[a-f0-9]+)$', 
         name='render_gist',
         view=views.fetch_and_render_gist),
-    #url(r'^{{ project_name }}/', include('{{ project_name }}.foo.urls')),
-    #url(r'^admin/', include(admin.site.urls)),
+
+    # url(r'^comments/', 
+    #     include('django.contrib.comments.urls')),
+
+    url(r'^admin/', include(admin.site.urls)),
+    url(r'^blog/', include(apps.blog.urls)),
 )
