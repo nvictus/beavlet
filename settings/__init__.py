@@ -17,6 +17,23 @@ SITE_NAME = 'beavlet'
 # name in our dotted import paths:
 #path.append(PROJECT_ROOT)
 
+ENVIRONMENT = os.getenv('ENVIRONMENT', 'DEVELOPMENT')
+
+PROJECT_PATH = os.path.abspath(os.path.join(os.path.dirname(__file__), os.path.pardir))
+
+PROJECT_NAME = PROJECT_PATH.split('/')[-1]
+
+ROOT_URLCONF = 'urls'
+
+# Python dotted path to the WSGI application used by Django's runserver.
+WSGI_APPLICATION = 'wsgi.application'
+
+#==============================================================================
+# Security
+#==============================================================================
+
+# Make this unique, and don't share it with anybody.
+SECRET_KEY = os.environ.get('SECRET_KEY', '')
 
 #==============================================================================
 # Generic Django project settings
@@ -24,23 +41,6 @@ SITE_NAME = 'beavlet'
 
 DEBUG = False
 TEMPLATE_DEBUG = DEBUG
-
-ADMINS = (
-    # ('Your Name', 'your_email@example.com'),
-)
-
-MANAGERS = ADMINS
-
-SITE_ID = 1
-
-TIME_ZONE = 'America/New_York'
-USE_I18N = True
-USE_L10N = True
-USE_TZ = True
-LANGUAGE_CODE = 'en-us'
-
-# Make this unique, and don't share it with anybody.
-SECRET_KEY = os.environ.get('SECRET_KEY', '')
 
 INSTALLED_APPS = (
     'django.contrib.auth',
@@ -50,31 +50,32 @@ INSTALLED_APPS = (
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'django.contrib.admin',
+    'django.contrib.comments',
     # 'django.contrib.admindocs',
-
-    'storages', #AWS storage backend for Django to get static files from CDN
     'gunicorn',
-    'south',
-    'filters', #custom template filters
-    # 'django_extensions',
+    #'south',
+    'apps.blog'
+)
 
+# My apps
+INSTALLED_APPS += (
     # '{{ project_name }}.core'
+    'filters', #custom template filters
 )
 
 #==============================================================================
-# Calculation of directories relative to the project module location
+# Globalization
 #==============================================================================
 
-ENVIRONMENT = os.getenv('ENVIRONMENT', 'DEVELOPMENT')
-PROJECT_PATH = os.path.abspath(os.path.join(os.path.dirname(__file__), os.path.pardir))
-PROJECT_NAME = PROJECT_PATH.split('/')[-1]
-
+TIME_ZONE = 'America/New_York'
+USE_I18N = True
+USE_L10N = True
+USE_TZ = True
+LANGUAGE_CODE = 'en-us'
 
 #==============================================================================
-# Project URLS and media settings
+# Static and media settings
 #==============================================================================
-
-ROOT_URLCONF = 'urls'
 
 MEDIA_ROOT = ''
 MEDIA_URL = ''
@@ -98,8 +99,14 @@ STATICFILES_DIRS = (
     # Don't forget to use absolute paths, not relative paths.
     os.path.join(SITE_ROOT, 'static'),
 )
-# The file storage engine to use when collecting static files with the collectstatic management command.
-#STATICFILES_STORAGE = 'storages.backends.s3boto.S3BotoStorage'
+# The file storage engine to use when collecting static files with the 
+# collectstatic management command.
+# AWS storage backend for Django to get static files from CDN
+if os.environ.get('USE_AWS', False):
+    INSTALLED_APPS += (
+        'storages',
+    )
+    STATICFILES_STORAGE = 'storages.backends.s3boto.S3BotoStorage'
 
 # Honor the 'X-Forwarded-Proto' header for request.is_secure()
 SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
@@ -141,16 +148,16 @@ MIDDLEWARE_CLASSES = (
 #==============================================================================
 
 #==============================================================================
-# Miscellaneous project settings
+# Error reporting
 #==============================================================================
 
-# Python dotted path to the WSGI application used by Django's runserver.
-WSGI_APPLICATION = 'wsgi.application'
+ADMINS = (
+    # ('Your Name', 'your_email@example.com'),
+)
 
-#==============================================================================
-# Third party app settings
-#==============================================================================
+MANAGERS = ADMINS
 
+SITE_ID = 1
 
 #==============================================================================
 # Logging
