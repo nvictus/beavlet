@@ -16,10 +16,10 @@ class Post(models.Model):
         return u'%s' % self.title
  
     def get_absolute_url(self):
-        return reverse('blog.views.post', args=[self.slug])
+        return reverse('apps.blog.views.post', args=[self.slug])
 
 
-class Beaver(models.Model):
-    post = models.ForeignKey(Post)
+# class Beaver(models.Model):
+#     post = models.ForeignKey(Post)
 
 
