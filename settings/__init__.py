@@ -69,7 +69,8 @@ INSTALLED_APPS += (
     #'core'
     'filters', #custom template filters
     'apps.blog',
-    'apps.nbviewer'
+    'apps.nbviewer',
+    'apps.dropbox',
 )
 
 #==============================================================================
@@ -195,3 +196,10 @@ LOGGING = {
         },
     }
 }
+
+#==============================================================================
+# Dropbox API
+#==============================================================================
+
+DROPBOX_APP_KEY = env_var('DROPBOX_APP_KEY', '')
+DROPBOX_APP_SECRET = env_var('DROPBOX_APP_SECRET', '')
