@@ -34,7 +34,7 @@ Thumbs.db
 
 # Folders
 tmp/
-bin/
+conf/
 node_modules/
 staticfiles/
 
