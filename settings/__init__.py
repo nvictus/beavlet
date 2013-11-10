@@ -67,6 +67,7 @@ INSTALLED_APPS = (
 # My apps
 INSTALLED_APPS += (
     #'core'
+    'accounts',
     'filters', #custom template filters
     'apps.blog',
     'apps.nbviewer',
@@ -77,10 +78,10 @@ INSTALLED_APPS += (
 # Globalization
 #==============================================================================
 
+USE_TZ = True
 TIME_ZONE = 'America/New_York'
 USE_I18N = True
 USE_L10N = True
-USE_TZ = True
 LANGUAGE_CODE = 'en-us'
 
 #==============================================================================
