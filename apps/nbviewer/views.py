@@ -20,7 +20,7 @@ c = Config()
 c.HTMLExporter.template_file = 'basic'
 c.NbconvertApp.fileext = 'html'
 c.CSSHTMLHeaderTransformer.enabled = False
-# don't strip the files prefix - we use it for redirects
+# don't strip the http prefix - we use it for redirects
 c.Exporter.filters = {'strip_files_prefix': lambda s: s}
 html_exporter = HTMLExporter(config=c)
 
@@ -62,15 +62,15 @@ def create(request, value=None):
 
     gist = re.search(r'^https?://gist.github.com/(\w+/)?([a-f0-9]+)$', value)
     if re.match('^[a-f0-9]+$', value):
-        response = redirect('/'+value)
+        response = redirect('/viewer/'+value)
     elif gist:
-        response = redirect('/'+gist.group(2))
+        response = redirect('/viewer/'+gist.group(2))
     elif value.startswith('https://'):
-        response = redirect('/urls/'+value[8:])
+        response = redirect('/viewer/urls/'+value[8:])
     elif value.startswith('http://'):
-        response = redirect('/url/'+value[7:])
+        response = redirect('/viewer/url/'+value[7:])
     else: # assume http url
-        response = redirect('/url/'+value) 
+        response = redirect('/viewer/url/'+value) 
 
     return response
 
@@ -154,6 +154,19 @@ def fetch_and_render_gist(request, id=None, subfile=None):
 
 # =====
 
+
+def render_raw_json_to_response(request, f, url='/viewer/foo.txt'):
+    try:
+        nb = parse_json(f)
+        name, theme, body = render_nb(nb,url)
+    except NbFormatError:
+        return four_hundred(request)
+    context = {'download_url': url,
+               'download_name': name,
+               'css_theme': theme,
+               'mathjax_conf': None,
+               'body': body }  
+    return render(request, 'nbviewer/notebook.html', context) 
 
 
 

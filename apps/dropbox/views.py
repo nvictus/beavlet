@@ -99,3 +99,59 @@ def dropbox_unlink(request):
     except Profile.DoesNotExist:
         pass
     return redirect('/dropbox/')
+
+
+@login_required
+def list_beavlets(request):
+    user = request.user
+    try:
+        access_token = user.profile.access_token
+    except Profile.DoesNotExist:
+        messages.add_message(request, messages.ERROR,
+            "Your dropbox account needs to be linked!")
+        return redirect('/dropbox/')
+
+    import os
+    beavlet_root = u'/'
+    ls = {}
+
+    client = DropboxClient(access_token)
+    resp = client.metadata(beavlet_root)
+    if 'contents' in resp:
+        for f in resp['contents']:
+            path = f['path']
+            name = os.path.basename(path)
+            ls[name] = '/dropbox/render-beavlet/' + name
+
+    return render(request, 'dropbox/list-beavlets.html',
+        {'listing': ls})
+
+@login_required
+def render_beavlet(request, doc):
+    user = request.user
+    try:
+        access_token = user.profile.access_token
+    except Profile.DoesNotExist:
+        message.add_message(request, messages.ERROR,
+            "Your dropbox account needs to be linked!")
+        return redirect('/dropbox/')
+
+    client = DropboxClient(access_token)
+    f, meta = client.get_file_and_metadata('/' + doc)
+    s = f.read()
+    from apps.nbviewer.views import render_raw_json_to_response
+    return render_raw_json_to_response(request, s)
+
+
+
+
+
+
+
+
+
+
+
+
+
+

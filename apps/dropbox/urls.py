@@ -14,4 +14,10 @@ urlpatterns = patterns('',
 
     url(r'^dropbox-unlink/$', 
         view=views.dropbox_unlink),
+
+    url(r'^list-beavlets/$',
+        view=views.list_beavlets),
+
+    url(r'^render-beavlet/(?P<doc>[\w\/ \.-]*)',
+        view=views.render_beavlet),
 )
