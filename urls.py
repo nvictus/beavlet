@@ -5,6 +5,7 @@ import accounts.urls
 import apps.nbviewer.urls
 import apps.blog.urls
 import apps.dropbox.urls
+import apps.dillinger.urls
 
 import views
 from apps.nbviewer.views import hello
@@ -18,6 +19,7 @@ urlpatterns = patterns('',
     url(r'^blog/', include(apps.blog.urls)),
     url(r'^viewer/', include(apps.nbviewer.urls)),
     url(r'^dropbox/', include(apps.dropbox.urls)),
+    url(r'^dillinger/', include(apps.dillinger.urls)),
 
 )
 
