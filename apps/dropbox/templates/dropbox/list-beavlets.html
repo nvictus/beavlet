@@ -1,0 +1,17 @@
+{% extends "dropbox/layout.html" %}
+{% block body %}
+	{% if real_name %}
+		<p>Welcome {{ real_name }}!
+		<p><a href="/dropbox/dropbox-unlink/" method="post">Unlink</a>
+	{% else %}
+	<a href="/dropbox/dropbox-link/">Link</a>
+	{% endif %}  
+
+	{% if listing %}
+		<ul>
+		{% for file, url in listing.items %}
+			<li><a href={{url}}>{{file}}</a></li>
+		{% endfor %}
+		</ul>
+	{% endif %}
+{% endblock %}
