@@ -61,7 +61,7 @@ INSTALLED_APPS = (
     'django.contrib.comments',
     # 'django.contrib.admindocs',
     'gunicorn',
-    #'south',
+    #'account',
 )
 
 # My apps
@@ -72,6 +72,7 @@ INSTALLED_APPS += (
     'apps.blog',
     'apps.nbviewer',
     'apps.dropbox',
+    'apps.dillinger',
 )
 
 #==============================================================================
@@ -133,6 +134,17 @@ TEMPLATE_LOADERS = (
 #     'django.template.loaders.eggs.Loader',
 )
 
+TEMPLATE_CONTEXT_PROCESSORS = (
+    "django.contrib.auth.context_processors.auth",
+    "django.core.context_processors.debug",
+    "django.core.context_processors.i18n",
+    "django.core.context_processors.media",
+    "django.core.context_processors.static",
+    "django.core.context_processors.tz",
+    "django.contrib.messages.context_processors.messages",
+    #'account.context_processors.account'
+)
+
 TEMPLATE_DIRS = (
     os.path.join(SITE_ROOT, 'templates'),
     # Put strings here, like "/home/html/django_templates" or "C:/www/django/templates".
@@ -150,6 +162,8 @@ MIDDLEWARE_CLASSES = (
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
+    #'account.middleware.LocaleMiddleware',
+    #'account.middleware.TimezoneMiddleware',
     # Uncomment the next line for simple clickjacking protection:
     # 'django.middleware.clickjacking.XFrameOptionsMiddleware',
 )

@@ -1,6 +1,7 @@
 from django.shortcuts import render, render_to_response, redirect
 from django.contrib import auth
 from django.contrib.auth.forms import UserCreationForm
+from django.contrib.auth.decorators import login_required
 
 def login(request):
     """
@@ -72,3 +73,10 @@ def register_user(request):
 
 def register_success(request):
     return render(request, 'accounts/register_success.html')
+
+@login_required
+def profile_view(request):
+    user = request.user
+    # populate profile page with user data
+    render(request, 'accounts/user_profile.html', context)
+
