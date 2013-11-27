@@ -7,7 +7,7 @@ export DJ_DEBUG=True
 export HOSTNAME='*'
 
 # Settings file to use
-export ENVIRONMENT=
+export ENVIRONMENT='DEVELOPMENT'
 
 # Django security
 export SECRET_KEY=
