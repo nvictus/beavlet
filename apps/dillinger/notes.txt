@@ -1,0 +1,195 @@
+// Routes
+app.get('/', routes.index)
+
+app.get('/not-implemented', routes.not_implemented)
+
+/* Begin Dropbox */
+app.get('/redirect/dropbox', routes.oauth_dropbox_redirect)
+app.get('/oauth/dropbox', routes.oauth_dropbox)
+app.get('/unlink/dropbox', routes.unlink_dropbox)
+app.get('/import/dropbox', routes.import_dropbox)
+// app.get('/account/dropbox', routes.account_info_dropbox)
+app.post('/fetch/dropbox', routes.fetch_dropbox_file)
+app.post('/save/dropbox', routes.save_dropbox)
+/* End Dropbox */
+
+/* Begin Github */
+app.get('/redirect/github', routes.oauth_github_redirect)
+app.get('/oauth/github', routes.oauth_github)
+app.get('/unlink/github', routes.unlink_github)
+// app.get('/account/github', routes.account_info_github)
+app.post('/import/github/repos', routes.import_github_repos)
+app.post('/import/github/branches', routes.import_github_branches)
+app.post('/import/github/tree_files', routes.import_tree_files)
+app.post('/import/github/file', routes.import_github_file)
+app.post('/save/github', routes.save_github)
+/* End Github */
+
+/* Begin Google Drive */
+app.get('/redirect/googledrive', routes.oauth_googledrive_redirect);
+app.get('/oauth/googledrive', routes.oauth_googledrive);
+app.get('/unlink/googledrive', routes.unlink_googledrive);
+app.get('/import/googledrive', routes.import_googledrive);
+app.get('/fetch/googledrive', routes.fetch_googledrive_file);
+app.post('/save/googledrive', routes.save_googledrive);
+/* End Google Drive */
+
+
+/* Dillinger Actions */
+// save a markdown file and send header to download it directly as response 
+app.post('/factory/fetch_markdown', routes.fetch_md)
+// Route to handle download of md file
+app.get('/files/md/:mdid', routes.download_md)
+// Save an html file and send header to download it directly as response 
+app.post('/factory/fetch_html', routes.fetch_html)
+app.post('/factory/fetch_html_direct', routes.fetch_html_direct)
+// Route to handle download of html file
+app.get('/files/html/:html', routes.download_html)
+// // Save a pdf file and send header to download it directly as response
+// app.post('/factory/fetch_pdf', routes.fetch_pdf)
+// // Route to handle download of pdf file
+// app.get('/files/pdf/:pdf', routes.download_pdf)
+
+
+
+
+
+
+  function init(){
+    if( !hasLocalStorage() ) { sadPanda() }
+    else{
+      // Attach to jQuery support object for later use.
+      $.support.transitionEnd = normalizeTransitionEnd()
+      
+      getUserProfile()
+      initAce()
+      initUi()
+
+      marked.setOptions({
+        gfm: true,
+        tables: true,
+        pedantic: false,
+        sanitize: false,
+        smartLists: true,
+        smartypants: false,
+        langPrefix: 'lang-'
+      })
+      converter = marked
+      
+      bindPreview()
+      bindNav()
+      bindKeyboard()
+      bindDelegation()
+      bindFilenameField()
+      bindWordCountEvents();
+              
+      autoSave()
+
+      initWordCount();
+      refreshWordCount();
+    }
+  }
+
+  function initAce(){
+    editor = ace.edit("editor") 
+  } 
+
+  function initUi(){
+    // Set proper theme value in theme dropdown
+    fetchTheme(profile.theme, function(){
+      $theme.find('li > a[data-value="'+profile.theme+'"]').addClass('selected')
+      
+      editor.getSession().setUseWrapMode(true)
+      editor.setShowPrintMargin(false)
+      editor.getSession().setMode('ace/mode/markdown')
+      editor.getSession().setValue( profile.currentMd || editor.getSession().getValue())
+      
+      // Immediately populate the preview <div>
+      previewMd()
+      
+    })
+    
+    // Set/unset paper background image on preview
+    // TODO: FIX THIS BUG
+    $preview.css('backgroundImage', profile.showPaper ? 'url("'+paperImgPath+'")' : 'url("")' )
+    
+    // Set text for dis/enable autosave / word counter
+    $autosave.html( profile.autosave.enabled ? '<i class="icon-remove"></i>&nbsp;Disable Autosave' : '<i class="icon-ok"></i>&nbsp;Enable Autosave' )
+    $wordcount.html( !profile.wordcount ? '<i class="icon-remove"></i>&nbsp;Disabled Word Count' : '<i class="icon-ok"></i>&nbsp;Enabled Word Count' )
+    
+    // Check for logged in Github user and notifiy
+    githubUser = $import_github.attr('data-github-username')
+    
+    githubUser && Notifier.showMessage("What's Up " + githubUser, 1000)
+        
+    setCurrentFilenameField()
+    
+    /* BEGIN RE-ARCH STUFF */
+    $('.dropdown-toggle').dropdown()
+    /* END RE-ARCH STUFF */ 
+  }
+
+
+Server side Core plugin module
+------------------------------
+fetchMd
+downloadMd
+fetchHtml
+fetchHtmlDirect
+downloadHtml
+
+Server side Dropbox plugin module
+---------------------------------
+getNewRequestToken
+getRemoteAccessToken
+getAccountInfo
+fetchDropboxFile
+searchForMdFiles
+saveToDropbox
+handleIncomingFlowRequest
+
+
+
+paperImgPath = '/img/notebook_paper_200x200.gif'
+
+'/factory/fetch_markdown'
+'/factory/fetch_html'
+'/factory/fetch_pdf'
+'/factory/fetch_html_direct'
+'/factory/fetch_markdown'
+'/factory/fetch_html'
+'/factory/fetch_pdf'
+'/factory/fetch_html_direct'
+
+
+
+
+Notification module
+-------------------
+messages:
+showMessage:
+
+
+Github module
+-------------
+'/import/github/repos'
+'/import/github/branches'
+'/import/github/tree_files'
+'/import/github/file'
+
+GoogleDrive module
+------------------
+'/import/googledrive'
+'/fetch/googledrive?fileId='
+'/save/googledrive?fileId=' + (GoogleDrive.fileId || '')
+
+Dropbox module
+--------------
+fetchAccountInfo: '/account/dropbox'
+fetchMetadata: '/dropbox/metadata'
+searchDropbox: '/import/dropbox'
+fetchMarkdownFile: '/fetch/dropbox'
+putMarkdownFile: '/save/dropbox'
+setFilePath
+
+
